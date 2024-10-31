@@ -74,9 +74,14 @@ resource "azurerm_management_group_policy_remediation" "rem" {
   name                           = lower("${each.key}-${formatdate("DD-MM-YYYY-hh:mm:ss", timestamp())}")
   management_group_id            = local.remediation_scope
   policy_assignment_id           = azurerm_management_group_policy_assignment.set.id
-  policy_definition_reference_id = each.key
+  policy_definition_reference_id = lower(each.key)
   location_filters               = var.location_filters
   failure_percentage             = var.failure_percentage
   parallel_deployments           = var.parallel_deployments
   resource_count                 = var.resource_count
+
+  lifecycle {
+    ignore_changes = [ name ]
+  }
+
 }
